@@ -1,2 +1,2 @@
-# Learn How to Create a Game Engine
-Java | Learning about game dev and how to create a game engine with Java.
+# Learn How to Create a 2D Game Engine
+Java | Learning about game dev and how to create a 2D game engine with Java.
