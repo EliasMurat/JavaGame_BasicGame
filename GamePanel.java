@@ -1,10 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.image.*;
+import java.awt.event.*;
 
-public class GamePanel extends JPanel implements Runnable {
+public class GamePanel extends JPanel implements Runnable, KeyListener {
 
-    // FIELDS | CAMPOS
+    // FIELDS | CAMPOS - ATRIBUTOS
     public static int WIDTH = 480;
     public static int HEIGHT = 360;
 
@@ -16,6 +18,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     private int FPS = 30;
     private double averageFPS;
+
+    private Player player;
 
     // CONSTRUCTOR | CONSTRUTOR
     public GamePanel() {
@@ -32,12 +36,15 @@ public class GamePanel extends JPanel implements Runnable {
             thread = new Thread(this);
             thread.start();
         }
+        addKeyListener(this);
     }
 
     public void run() {
         running = true;
         image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         g = (Graphics2D) image.getGraphics();
+
+        player = new Player();
 
         long startTime;
         long URDTimeMillis;
@@ -79,15 +86,17 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     private void gameUpdate() {
-
+        player.update();
     }
 
     private void gameRender() {
-        g.setColor(Color.WHITE);
+        g.setColor(Color.decode("#212121"));
         g.fillRect(0, 0, WIDTH, HEIGHT);
-        g.setColor(Color.BLACK);
+        g.setColor(Color.decode("#fafafa"));
         int formatedFPS = (int) averageFPS;
-        g.drawString("FPS: " + formatedFPS, 5, 10); 
+        g.drawString("FPS: " + formatedFPS, 5, 15); 
+        
+        player.draw(g);
     }
 
     private void gameDraw() {
@@ -96,4 +105,35 @@ public class GamePanel extends JPanel implements Runnable {
         g2.dispose();
     }
 
+    public void keyTyped(KeyEvent key) {}
+    public void keyPressed(KeyEvent key) {
+        int keyCode = key.getKeyCode();
+        if(keyCode == KeyEvent.VK_LEFT){
+            player.setLeft(true);
+        }
+        if(keyCode == KeyEvent.VK_RIGHT){
+            player.setRight(true);
+        }
+        if(keyCode == KeyEvent.VK_UP){
+            player.setUp(true);
+        }
+        if(keyCode == KeyEvent.VK_DOWN){
+            player.setDown(true);
+        }
+    }
+    public void keyReleased(KeyEvent key) {
+        int keyCode = key.getKeyCode();
+        if(keyCode == KeyEvent.VK_LEFT){
+            player.setLeft(false);
+        }
+        if(keyCode == KeyEvent.VK_RIGHT){
+            player.setRight(false);
+        }
+        if(keyCode == KeyEvent.VK_UP){
+            player.setUp(false);
+        }
+        if(keyCode == KeyEvent.VK_DOWN){
+            player.setDown(false);
+        }
+    }
 }
