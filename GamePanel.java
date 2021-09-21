@@ -87,7 +87,7 @@ public class GamePanel extends JPanel implements Runnable {
         g.fillRect(0, 0, WIDTH, HEIGHT);
         g.setColor(Color.BLACK);
         int formatedFPS = (int) averageFPS;
-        g.drawString("FPS: " + formatedFPS, 5, 10);
+        g.drawString("FPS: " + formatedFPS, 5, 10); 
     }
 
     private void gameDraw() {
