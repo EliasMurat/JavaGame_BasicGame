@@ -15,6 +15,10 @@ public class Player {
     private boolean up;
     private boolean down;
 
+    private boolean firing;
+    private long firingTimer;
+    private long firingDelay;
+
     private int lives;
     private Color color1;
     private Color color2;
@@ -23,15 +27,19 @@ public class Player {
     public Player(){
         x = GamePanel.WIDTH / 2;
         y = GamePanel.HEIGHT / 2;
-        r = 5;
+        r = 7;
 
         dx = 0;
         dy = 0;
-        speed = 5;
+        speed = 10;
 
         lives = 3;
         color1 = Color.decode("#212121");
         color2 = Color.decode("#fafafa");
+
+        firing = false;
+        firingTimer = System.nanoTime();
+        firingDelay = 200;
     }
 
     // FUNCTIONS | FUNÇÔES
@@ -39,6 +47,7 @@ public class Player {
     public void setRight(boolean b) { right = b; }
     public void setUp(boolean b) { up = b; }
     public void setDown(boolean b) { down = b; }
+    public void setFiring(boolean b) { firing = b; }
 
     public void update() {
         if (left) dx = -speed;
@@ -56,6 +65,14 @@ public class Player {
 
         dx = 0;
         dy = 0;
+
+        if (firing) {
+            long elapsed = (System.nanoTime() - firingTimer) / 1000000;
+            if (elapsed > firingDelay) {
+                GamePanel.bullets.add(new Bullet(270, x, y));
+                firingTimer = System.nanoTime();
+            }
+        }
     }
 
     public void draw(Graphics2D g) {
