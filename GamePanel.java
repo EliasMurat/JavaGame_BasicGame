@@ -22,6 +22,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
     public static Player player;
     public static ArrayList<Bullet> bullets;
+    public static ArrayList<Enemy> enemies;
 
     // CONSTRUCTOR | CONSTRUTOR
     public GamePanel() {
@@ -48,6 +49,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
         player = new Player();
         bullets = new ArrayList<Bullet>();
+        enemies = new ArrayList<Enemy>();
+
+        for (int i = 0; i < 5; i++) {
+            enemies.add(new Enemy(1, 1));
+        }
 
         long startTime;
         long URDTimeMillis;
@@ -89,7 +95,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     }
 
     private void gameUpdate() {
+        // PLAYER UPDATE
         player.update();
+        
+        // BULLETS UPDATE
         for (int i = 0; i < bullets.size(); i++) {
             boolean remove = bullets.get(i).update();
             if (remove) {
@@ -97,20 +106,78 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
                 i--;
             }
         }
+
+        // ENEMY UPDATE
+        for (int i = 0; i < enemies.size(); i++) {
+            enemies.get(i).update();
+        }
+
+        // COLLISION
+        // Bullet -> Enemy
+        for (int b = 0; b < bullets.size(); b++) {
+
+            // get bullet position
+            Bullet bullet = bullets.get(b);
+            double bx = bullet.getX();
+            double by = bullet.getY();
+            double br = bullet.getR();
+
+            for (int e = 0; e < enemies.size(); e++) {
+
+                // get enemy position
+                Enemy enemy = enemies.get(e);
+                double ex = enemy.getX();
+                double ey = enemy.getY();
+                double er = enemy.getR();
+    
+                // get delta between two points | calc dist between two points
+                double dx = bx - ex;
+                double dy = by - ey;
+                double dist = Math.sqrt(dx * dx + dy * dy);
+
+                // check if dist is equals a collision
+                if (dist < br + er) {
+                    enemy.hit();
+                    bullets.remove(b);
+                    b--;
+                    break;
+                }
+            }
+        }
+
+        // CHECK DEAD ENEMIES
+        for (int i = 0; i < enemies.size(); i++) {
+            if (enemies.get(i).isDead()) {
+                enemies.remove(i);
+                i--;
+            }
+        }
+
     }
 
     private void gameRender() {
+        // DRAW BACKGROUND
         g.setColor(Color.decode("#212121"));
         g.fillRect(0, 0, WIDTH, HEIGHT);
+
+        // DRAW UI (User Interface)
         g.setColor(Color.decode("#fafafa"));
         int formatedFPS = (int) averageFPS;
         g.drawString("FPS: " + formatedFPS, 5, 15); 
         
+        // DRAW PLAYER
         player.draw(g);
 
+        // DRAW BULLETS
         for (int i = 0; i < bullets.size(); i++) {
             bullets.get(i).draw(g);
         }
+
+        // DRAW ENEMY
+        for (int i = 0; i < enemies.size(); i++) {
+            enemies.get(i).draw(g);
+        }
+
     }
 
     private void gameDraw() {

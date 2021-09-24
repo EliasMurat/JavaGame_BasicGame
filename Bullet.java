@@ -28,6 +28,10 @@ public class Bullet {
   }
 
   // FUNCTIONS | FUNÇÔES
+  public double getX() { return x; }
+  public double getY() { return y; }
+  public double getR() { return r; }
+  
   public boolean update() {
     x += dx;
     y += dy;

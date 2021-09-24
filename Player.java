@@ -21,7 +21,6 @@ public class Player {
 
     private int lives;
     private Color color1;
-    private Color color2;
 
     // CONSTRUCTOR | CONSTRUTOR
     public Player(){
@@ -31,11 +30,10 @@ public class Player {
 
         dx = 0;
         dy = 0;
-        speed = 10;
+        speed = 7;
 
         lives = 3;
-        color1 = Color.decode("#212121");
-        color2 = Color.decode("#fafafa");
+        color1 = Color.decode("#2196F3");
 
         firing = false;
         firingTimer = System.nanoTime();
@@ -79,8 +77,7 @@ public class Player {
         g.setColor(color1);
         g.fillOval(x - r, y - r, 2 * r, 2 * r);
         g.setStroke(new BasicStroke(3));
-        g.setColor(color2);
-        g.fillOval(x - r, y - r, 2 * r, 2 * r);
-        g.setStroke(new BasicStroke(1));
+        g.setColor(color1.darker());
+        g.drawOval(x - r, y - r, 2 * r, 2 * r);
     }
 }
