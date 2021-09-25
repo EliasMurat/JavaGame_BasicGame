@@ -17,14 +17,14 @@ public class Bullet {
   public Bullet(double angle, int x, int y){
     this.x = x;
     this.y = y;
-    r = 2; 
+    r = 3; 
+    speed = 15;
 
     rad = Math.toRadians(angle);
-    speed = 15;
     dx = Math.cos(rad) * speed;
     dy = Math.sin(rad) * speed;
 
-    color1 = Color.YELLOW;
+    color1 = Color.decode("#FFEB3B");
   }
 
   // FUNCTIONS | FUNÇÔES
@@ -36,7 +36,8 @@ public class Bullet {
     x += dx;
     y += dy;
 
-    if(x < -r || x > GamePanel.WIDTH + r || y < -r || x > GamePanel.HEIGHT + r) {
+    if(x < -r || x > GamePanel.WIDTH + r ||
+       y < -r || y > GamePanel.HEIGHT + r) {
       return true;
     }
 

@@ -24,6 +24,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     public static ArrayList<Bullet> bullets;
     public static ArrayList<Enemy> enemies;
 
+    private long waveStartTime;
+    private long waveStartTimeDiff;
+    private int waveNumber;
+    private boolean waveStart;
+    private int waveDelay = 2000;
+
     // CONSTRUCTOR | CONSTRUTOR
     public GamePanel() {
         super();
@@ -46,14 +52,17 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         running = true;
         image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         g = (Graphics2D) image.getGraphics();
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
         player = new Player();
         bullets = new ArrayList<Bullet>();
         enemies = new ArrayList<Enemy>();
 
-        for (int i = 0; i < 5; i++) {
-            enemies.add(new Enemy(1, 1));
-        }
+        waveStartTime = 0;
+        waveStartTimeDiff = 0;
+        waveStart = true;
+        waveNumber = 0;
 
         long startTime;
         long URDTimeMillis;
@@ -95,6 +104,25 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     }
 
     private void gameUpdate() {
+        // NEW WAVE
+        if (waveStartTime == 0 && enemies.size() == 0) {
+            waveNumber++;
+            waveStart = false;
+            waveStartTime = System.nanoTime();
+        } else {
+            waveStartTimeDiff = (System.nanoTime() - waveStartTime) / 1000000;
+            if (waveStartTimeDiff > waveDelay) {
+                waveStart = true;
+                waveStartTime = 0;
+                waveStartTimeDiff = 0;
+            }
+        }
+
+        // CREATE ENEMIES
+        if (waveStart && enemies.size() == 0) {
+            createNewEnemies();
+        }
+
         // PLAYER UPDATE
         player.update();
         
@@ -161,9 +189,20 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
         // DRAW UI (User Interface)
+        g.setFont(new Font("Century Gothic", Font.PLAIN, 12));
         g.setColor(Color.decode("#fafafa"));
         int formatedFPS = (int) averageFPS;
-        g.drawString("FPS: " + formatedFPS, 5, 15); 
+        g.drawString("FPS: " + formatedFPS, 8, 16); 
+
+        // DRAW PLAYER LIVES
+        for (int i = 0; i < player.getLives(); i++) {
+            g.setColor(Color.decode("#F44336"));
+            g.fillOval((WIDTH - 20 * i) - 20, 8, 10, 10);
+            g.setStroke(new BasicStroke(3));
+            g.setColor(Color.decode("#F44336").darker());
+            g.drawOval((WIDTH - 20 * i) - 20, 8, 10, 10);
+            g.setStroke(new BasicStroke(1));
+        }
         
         // DRAW PLAYER
         player.draw(g);
@@ -178,12 +217,44 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             enemies.get(i).draw(g);
         }
 
+        // DRAW WAVE NUMBER
+        if (waveStartTime != 0) {
+            g.setFont(new Font("Century Gothic", Font.PLAIN, 18));
+            String s = "- W A V E   " + waveNumber + "  -";
+            int lenght = (int) g.getFontMetrics().getStringBounds(s, g).getWidth();
+            int alpha = (int) (255 * Math.sin(3.14 * waveStartTimeDiff / waveDelay));
+            if(alpha > 255) alpha = 255;
+            g.setColor(new Color(255, 255, 255, alpha));
+            g.drawString(s, WIDTH / 2 - lenght / 2, HEIGHT / 2); 
+        }
+
     }
 
     private void gameDraw() {
         Graphics g2 = this.getGraphics();
         g2.drawImage(image, 0, 0, null);
         g2.dispose();
+    }
+
+    private void createNewEnemies() {
+        enemies.clear();
+        Enemy e;
+
+        if (waveNumber == 1) {
+            for (int i = 0; i < 10; i++) {
+                enemies.add(new Enemy(1, 1));
+            }
+        }
+        if (waveNumber == 2) {
+            for (int i = 0; i < 7; i++) {
+                enemies.add(new Enemy(1, 2));
+            }
+        }
+        if (waveNumber == 3) {
+            for (int i = 0; i < 5; i++) {
+                enemies.add(new Enemy(1, 3));
+            }
+        }
     }
 
     public void keyTyped(KeyEvent key) {}

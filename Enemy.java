@@ -26,11 +26,23 @@ public class Enemy {
     this.rank = rank;
 
     if (type == 1) {
-      color1 = Color.decode("#F44336");
       if (rank == 1) {
+        color1 = Color.decode("#4CAF50");
         speed = 3;
         r = 7;
         health = 1;
+      }
+      if (rank == 2) {
+        color1 = Color.decode("#FF5722");
+        speed = 5;
+        r = 10;
+        health = 3;
+      }
+      if (rank == 3) {
+        color1 = Color.decode("#9C27B0");
+        speed = 7;
+        r = 15;
+        health = 5;
       }
     }
 
@@ -56,6 +68,7 @@ public class Enemy {
 
   public void hit() {
     health--;
+
     if (health <= 0) {
       dead = true;
     }

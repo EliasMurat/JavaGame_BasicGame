@@ -41,10 +41,16 @@ public class Player {
     }
 
     // FUNCTIONS | FUNÇÔES
+    public double getX() { return x; }
+    public double getY() { return y; }
+    public double getR() { return r; }
+    public int getLives() { return lives; }
+
     public void setLeft(boolean b) { left = b; }
     public void setRight(boolean b) { right = b; }
     public void setUp(boolean b) { up = b; }
     public void setDown(boolean b) { down = b; }
+    
     public void setFiring(boolean b) { firing = b; }
 
     public void update() {
