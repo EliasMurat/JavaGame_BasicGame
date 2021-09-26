@@ -18,7 +18,7 @@ public class Bullet {
     this.x = x;
     this.y = y;
     r = 3; 
-    speed = 15;
+    speed = 10;
 
     rad = Math.toRadians(angle);
     dx = Math.cos(rad) * speed;

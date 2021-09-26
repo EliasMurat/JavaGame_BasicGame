@@ -23,6 +23,9 @@ public class Player {
     private long recoveryTimer;
 
     private int lives;
+
+    private int power;
+
     private Color color1;
     private Color color2;
 
@@ -70,8 +73,21 @@ public class Player {
     
     public void setFiring(boolean b) { firing = b; }
 
+    public void increasePower(int i) {
+        if (power < 8) {       
+            power += i;
+        }
+    }
 
-    public void hit() {
+    public int getPower() { return power; }
+
+    public void gainLife() {
+        if (lives < 10) {
+            lives++;
+        }
+    }
+
+    public void loseLife() {
         lives--;
         recovering = true;
         recoveryTimer = System.nanoTime();
@@ -97,8 +113,18 @@ public class Player {
         if (firing) {
             long elapsed = (System.nanoTime() - firingTimer) / 1000000;
             if (elapsed > firingDelay) {
-                GamePanel.bullets.add(new Bullet(270, x, y));
                 firingTimer = System.nanoTime();
+
+                if (power < 3) {
+                    GamePanel.bullets.add(new Bullet(270, x, y));
+                } else if (power < 7) {
+                    GamePanel.bullets.add(new Bullet(270, x + 5, y));
+                    GamePanel.bullets.add(new Bullet(270, x - 5, y));
+                } else {
+                    GamePanel.bullets.add(new Bullet(270, x, y));
+                    GamePanel.bullets.add(new Bullet(275, x + 5, y));
+                    GamePanel.bullets.add(new Bullet(265, x - 5, y));
+                }
             }
         }
 

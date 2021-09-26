@@ -44,7 +44,7 @@ public class PowerUp {
     public int getType() { return type; }
 
     public boolean update() {
-        y += 2;
+        y += 3;
 
         if (y > GamePanel.HEIGHT + r) {
             return true;

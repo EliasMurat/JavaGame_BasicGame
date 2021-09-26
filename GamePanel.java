@@ -207,10 +207,52 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
                 // check if dist is equals a collision
                 if (dist < pr + er) {
-                    player.hit();
+                    player.loseLife();
                 }
             }
         }
+
+        // Player -> Power Up
+        // get player position
+        int px = (int) player.getX();
+        int py = (int) player.getY();
+        int pr = (int) player.getR();
+        for (int pu = 0; pu < powerUps.size(); pu++) {
+            // get power up position
+            PowerUp powerUp = powerUps.get(pu);
+            double pux = powerUp.getX();
+            double puy = powerUp.getY();
+            double pur = powerUp.getR();
+
+            // get delta between two points | calc dist between two points
+            double dx = px - pux;
+            double dy = py - puy;
+            double dist = Math.sqrt(dx * dx + dy * dy);
+
+            // check if dist is equals a collision 
+            if (dist < pr + pur) {
+
+                // get power up type
+                int type = powerUp.getType();
+
+                // check type
+                if (type == 1) {
+                    player.gainLife();
+                }
+                if (type == 2) {
+                    player.increasePower(1);
+                }
+                if (type == 3) {
+                    player.increasePower(3);
+                }
+
+                // remove power up | collected power up
+                powerUps.remove(pu);
+                pu--;
+
+            }
+        }
+
 
         // CHECK DEAD ENEMIES
         for (int i = 0; i < enemies.size(); i++) {
@@ -220,9 +262,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
                 
                 // Change for power up
                 double rand = Math.random();
-                if (rand < 0.001) powerUps.add(new PowerUp(1, e.getX(), e.getY()));
-                else if (rand < 0.020) powerUps.add(new PowerUp(3, e.getX(), e.getY()));
-                else if (rand < 0.150) powerUps.add(new PowerUp(2, e.getX(), e.getY()));
+                if (rand < 0.030) powerUps.add(new PowerUp(1, e.getX(), e.getY()));
+                else if (rand < 0.015) powerUps.add(new PowerUp(3, e.getX(), e.getY()));
+                else if (rand < 0.060) powerUps.add(new PowerUp(2, e.getX(), e.getY()));
 
                 // Add score
                 player.addScore(e.getType() + e.getRank());
@@ -247,6 +289,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         int formatedFPS = (int) averageFPS;
         g.drawString("FPS: " + formatedFPS, 8, 16); 
 
+        // DRAW SCORE
+        g.setFont(new Font("Century Gothic", Font.PLAIN, 12));
+        g.setColor(Color.decode("#fafafa"));
+        g.drawString("SCORE: " + player.getScore(), 8, 38); 
+
         // DRAW PLAYER LIVES
         for (int i = 0; i < player.getLives(); i++) {
             g.setColor(Color.decode("#F44336"));
@@ -257,11 +304,16 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             g.setStroke(new BasicStroke(1));
         }
 
-        // DRAW SCORE
-        g.setFont(new Font("Century Gothic", Font.PLAIN, 12));
-        g.setColor(Color.decode("#fafafa"));
-        g.drawString("SCORE: " + player.getScore(), 8, 32); 
-        
+        // DRAW PLAYER POWER
+        for (int i = 0; i < player.getPower(); i++) {
+            g.setColor(Color.decode("#FFEB3B"));
+            g.fillRect((WIDTH - 20 * i) - 20, 32, 10, 10);
+            g.setStroke(new BasicStroke(3));
+            g.setColor(Color.decode("#FFEB3B").darker());
+            g.drawRect((WIDTH - 20 * i) - 20, 32, 10, 10);
+            g.setStroke(new BasicStroke(1));
+        }
+    
         // DRAW ENTITIES
         // DRAW PLAYER
         player.draw(g);
@@ -317,6 +369,37 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             for (int i = 0; i < 5; i++) {
                 enemies.add(new Enemy(1, 3));
             }
+        }
+        if (waveNumber == 4) {
+            for (int i = 0; i < 10; i++) {
+                enemies.add(new Enemy(1, 1));
+            }
+            for (int i = 0; i < 5; i++) {
+                enemies.add(new Enemy(1, 2));
+            }
+        }
+        if (waveNumber == 5) {
+            for (int i = 0; i < 10; i++) {
+                enemies.add(new Enemy(1, 1));
+            }
+            for (int i = 0; i < 5; i++) {
+                enemies.add(new Enemy(1, 3));
+            }
+        }
+        if (waveNumber == 6) {
+            for (int i = 0; i < 10; i++) {
+                enemies.add(new Enemy(1, 1));
+            }
+            for (int i = 0; i < 7; i++) {
+                enemies.add(new Enemy(1, 2));
+            }
+            for (int i = 0; i < 5; i++) {
+                enemies.add(new Enemy(1, 3));
+            }
+        }
+        if (waveNumber == 7) {
+            waveStart = false;
+            System.out.println("- YOU WIN -");
         }
     }
 
