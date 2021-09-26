@@ -262,9 +262,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
                 
                 // Change for power up
                 double rand = Math.random();
-                if (rand < 0.030) powerUps.add(new PowerUp(1, e.getX(), e.getY()));
-                else if (rand < 0.015) powerUps.add(new PowerUp(3, e.getX(), e.getY()));
-                else if (rand < 0.060) powerUps.add(new PowerUp(2, e.getX(), e.getY()));
+                if (rand < 0.050) powerUps.add(new PowerUp(3, e.getX(), e.getY()));
+                else if (rand < 0.100) powerUps.add(new PowerUp(1, e.getX(), e.getY()));
+                else if (rand < 0.150) powerUps.add(new PowerUp(2, e.getX(), e.getY()));
 
                 // Add score
                 player.addScore(e.getType() + e.getRank());
@@ -272,6 +272,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
                 // Remove enemy
                 enemies.remove(i);
                 i--;
+
+                // Enemy explode
+                e.explode();
             }
         }
 

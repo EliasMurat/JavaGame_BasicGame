@@ -92,6 +92,33 @@ public class Enemy {
     }
   }
 
+  public void explode() {
+    int amount = 0;
+    if (rank == 2) {
+      amount = 2;
+    }
+    if (rank == 3) {
+      amount = 4;
+    }
+    for (int i = 0; i < amount; i++) {
+      Enemy e = new Enemy(getType(), getRank() - 1);
+      e.x = this.x;
+      e.y = this.y;
+
+      if (e.getRank() >= 1) {
+        double angle = 0;
+        if (!ready) {
+          angle = Math.random() * 140 + 20;
+        } else {
+          angle = Math.random() * 360;
+        }
+        e.rad = Math.toRadians(angle);
+        GamePanel.enemies.add(e);        
+      }
+
+    }
+  }
+
   public void update() {
     x += dx;
     y += dy;
@@ -108,7 +135,7 @@ public class Enemy {
     if (y > GamePanel.HEIGHT - r && dy > 0) dy = -dy;
 
     long elapsed = (System.nanoTime() - recoveryTimer) / 1000000;
-      if (elapsed > 200) {
+      if (elapsed > 100) {
           recovering = false;
           recoveryTimer = 0;
       }
