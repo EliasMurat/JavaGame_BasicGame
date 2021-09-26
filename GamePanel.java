@@ -165,7 +165,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
                 // check if dist is equals a collision
                 if (dist < br + er) {
-                    enemy.hit();
+                    if (!enemy.isRecovering()) {
+                        enemy.hit();
+                    }
                     bullets.remove(b);
                     b--;
                     break;
@@ -173,9 +175,39 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             }
         }
 
+        // Enemy -> Player
+        if (!player.isRecovering()) {
+            // get player position
+            int px = (int) player.getX();
+            int py = (int) player.getY();
+            int pr = (int) player.getR();
+            
+            for (int e = 0; e < enemies.size(); e++) {
+                // get enemy position
+                Enemy enemy = enemies.get(e);
+                double ex = enemy.getX();
+                double ey = enemy.getY();
+                double er = enemy.getR();
+                
+                // get delta between two points | calc dist between two points
+                double dx = px - ex;
+                double dy = py - ey;
+                double dist = Math.sqrt(dx * dx + dy * dy);
+
+                // check if dist is equals a collision
+                if (dist < pr + er) {
+                    player.hit();
+                }
+            }
+        }
+
         // CHECK DEAD ENEMIES
         for (int i = 0; i < enemies.size(); i++) {
             if (enemies.get(i).isDead()) {
+                Enemy e = enemies.get(i);
+                
+                player.addScore(e.getType() + e.getRank());
+                
                 enemies.remove(i);
                 i--;
             }
@@ -189,6 +221,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
         // DRAW UI (User Interface)
+        // FPS
         g.setFont(new Font("Century Gothic", Font.PLAIN, 12));
         g.setColor(Color.decode("#fafafa"));
         int formatedFPS = (int) averageFPS;
@@ -203,7 +236,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             g.drawOval((WIDTH - 20 * i) - 20, 8, 10, 10);
             g.setStroke(new BasicStroke(1));
         }
+
+        // DRAW SCORE
+        g.setFont(new Font("Century Gothic", Font.PLAIN, 12));
+        g.setColor(Color.decode("#fafafa"));
+        g.drawString("SCORE: " + player.getScore(), 8, 32); 
         
+        // DRAW ENTITIES
         // DRAW PLAYER
         player.draw(g);
 
