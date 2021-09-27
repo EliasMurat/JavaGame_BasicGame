@@ -24,6 +24,8 @@ public class Enemy {
   private boolean ready;
   private boolean dead;
 
+  private boolean slow;
+
   // CONSTRUCTOR | CONSTRUTOR
   public Enemy(int type, int rank) {
     this.type = type;
@@ -74,6 +76,8 @@ public class Enemy {
   public double getY() { return y; }
   public double getR() { return r; }
 
+  public void setSlow(boolean b) { slow = b; }
+
   public int getType() { return type; }
   public int getRank() { return rank; }
 
@@ -120,8 +124,13 @@ public class Enemy {
   }
 
   public void update() {
-    x += dx;
-    y += dy;
+    if (slow) {
+      x += dx * 0.3;
+      y += dy * 0.3;
+    } else {
+      x += dx;
+      y += dy;
+    }
     
     if (!ready) {
       if (x > r && x < GamePanel.WIDTH - r && y > r && y < GamePanel.HEIGHT - r) {

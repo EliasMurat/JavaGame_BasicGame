@@ -24,7 +24,7 @@ public class Bullet {
     dx = Math.cos(rad) * speed;
     dy = Math.sin(rad) * speed;
 
-    color1 = Color.decode("#FFEB3B");
+    color1 = Color.decode("#9E9E9E");
   }
 
   // FUNCTIONS | FUNÇÔES

@@ -24,7 +24,7 @@ public class Player {
 
     private int lives;
 
-    private int power;
+    private int power = 10;
 
     private Color color1;
     private Color color2;
@@ -59,6 +59,8 @@ public class Player {
     public double getX() { return x; }
     public double getY() { return y; }
     public double getR() { return r; }
+
+    public int getSpeed() { return speed; }
     
     public int getLives() { return lives; }
     public boolean isRecovering() { return recovering; }
@@ -73,8 +75,20 @@ public class Player {
     
     public void setFiring(boolean b) { firing = b; }
 
+    public void increaseSpeed(int i) {
+        if (speed < 10) { 
+            if (i > 1 && power > 8) {
+                i = 1;
+            }
+            speed += i;         
+        }
+    }
+
     public void increasePower(int i) {
-        if (power < 8) {       
+        if (power < 10) {
+            if (i > 1 && power > 8) {
+                i = 1;
+            }
             power += i;
         }
     }

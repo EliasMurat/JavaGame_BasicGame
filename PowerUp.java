@@ -11,6 +11,8 @@ public class PowerUp {
      * [1] -> +1 life  
      * [2] -> +1 power 
      * [3] -> +2 power
+     * [4] -> +1 speed
+     * [5] -> slow down time
      */
     private int type;
 
@@ -23,16 +25,24 @@ public class PowerUp {
         this.y = y;
 
         if (type == 1) {
-            color1 = Color.decode("#E91E63");
+            color1 = Color.decode("#F44336");
             r = 5;
         }
         if (type == 2) {
-            color1 = Color.decode("#FFEB3B");
+            color1 = Color.decode("#9E9E9E");
             r = 5;
         }
         if (type == 3) {
-            color1 = Color.decode("#FFEB3B");
+            color1 = Color.decode("#9E9E9E");
             r = 7;
+        }
+        if (type == 4) {
+            color1 = Color.decode("#FFC107");
+            r = 5;
+        }
+        if (type == 5) {
+            color1 = Color.decode("#00BCD4");
+            r = 5;
         }
     }
 
