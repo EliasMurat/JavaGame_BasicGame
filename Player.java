@@ -24,7 +24,7 @@ public class Player {
 
     private int lives;
 
-    private int power = 10;
+    private int power;
 
     private Color color1;
     private Color color2;
@@ -39,9 +39,11 @@ public class Player {
 
         dx = 0;
         dy = 0;
-        speed = 7;
 
+        speed = 7;
+        power = 1;
         lives = 3;
+        
         color1 = Color.decode("#2196F3");
         color2 = Color.decode("#80DEEA");
 
@@ -62,6 +64,7 @@ public class Player {
 
     public int getSpeed() { return speed; }
     
+    public boolean isDead() { return lives <= 0; }
     public int getLives() { return lives; }
     public boolean isRecovering() { return recovering; }
     
